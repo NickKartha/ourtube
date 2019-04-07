@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+	<head>
+		<title>OurTube</title>
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/pure-min.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+	</head>
+	<body>
+		<div class = "navbar">
+				<a>Home</a>
+				<form action = "/latest" method = "POST">
+					<input type = "search" placeholder = "Search..." id = "search" name = "search" class = "search">
+				</form>
+		</div>
+		{% autoescape false %}
+		<div class = "content">
+			<h1>Latest Videos: </h1>
+			{% if descs %}
+				{% for n in descs %}
+					<p>TITLE: {{ n["title"] }}</p>
+					<p>THUMBNAIL: <img width = "320" height = "180" src = "{{ url_for('static', filename='thumbnail/' + n[1] + '.jpg') }}" />
+				{% endfor %}
+			{% endif %}
+			{% endautoescape %}
+		</div>
+	</body>
+</html>

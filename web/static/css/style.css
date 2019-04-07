@@ -1,0 +1,45 @@
+html {
+	background-color: #252934;
+	color: #fff;
+}
+.navbar {
+	background-color: #342529;
+}
+.search {
+	color: #fff;
+	display: inline;
+}
+.results {
+	padding: 5px;
+}
+.results .result-thumbnail {
+	width: 320px;
+	height: auto;
+}
+.results a {
+	color: #fff;
+}
+.video-wrapper {
+	width: 640px;
+	height: auto;
+	display: block;
+	margin-right: auto;
+	margin-left: 10%;
+	width: 50%;
+}
+.video-wrapper video {
+	position: center;
+	width: 640px;
+	height: auto;
+}
+.video-desc {
+	display: block;
+	position: center;
+	margin-right: auto;
+	margin-left: 10%;
+	width: 50%;
+	overflow: auto;
+}
+.hidden {
+	visibility: hidden;
+}

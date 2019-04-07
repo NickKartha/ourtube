@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+	<head>
+		{% block head %}
+		<title>OurTube</title>
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/pure-min.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/style.css') }}">
+		{% endblock %}
+	</head>
+	<body>
+		<div class = "pure-menu pure-menu-horizontal navbar">
+			<a href = "/" class = "pure-menu-heading pure-menu-link">Home</a>
+			<form action = "/search" class = "search">
+				<input type = "search" id = "search" placeholder = "Search" name = "search">
+			</form>
+		</div>
+		<div class = "content">
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if results %}
+	{% for result in results %}
+		<div class = "results">
+			<a href = "{{ 'id/' + result[1] }}">
+				<img class = "result-thumbnail" src = "{{ url_for('static', filename = "thumbnail/" + result[1] + ".jpg") }}">
+				{{ result[4] }}
+			</a>
+		</div>
+	{% endfor %}
+{% else %}
+<p>No results found.</p>
+{% endif %}
+
+{% endblock %}
