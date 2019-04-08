@@ -4,8 +4,8 @@ import youtube_dl
 import os
 from pathlib import PurePath
 #dl_list = ['wj6C-wdoXz8', 'pNBI8wUifdE', 'l3C6CAdXh44', 's04fn1wtKg0', 'bOfYvze1ueo']
-#dl_list = ['https://www.youtube.com/playlist?list=PL_MvsrI4mukQiIPf_zP07yk2nKd8W4UpB']
-dl_list = ['PTgchyWrgH8']
+dl_list = ['https://www.youtube.com/playlist?list=PL_MvsrI4mukQiIPf_zP07yk2nKd8W4UpB']
+#dl_list = ['PTgchyWrgH8']
 dl_dir = "web/static"
 auth = ['localhost', 'postgres', 'docker']
 def GetMetadata(url):
@@ -57,12 +57,16 @@ def AddToDatabase(_metadata, _name, _replace = False):
 def DownloadVideo(url, _opts):
     with youtube_dl.YoutubeDL(_opts) as ydl:
         ydl.download([url])
+def GetVideo(_metadata):
+    formats = GetFormat(_metadata)
+    name = GetName(_metadata, {}, formats)
+    DownloadVideo(_metadata['id'], {'format': formats[1], 'outtmpl': f'{dl_dir}/video/%(uploader_id)s/{name}'})
+    GetThumbnail(_metadata)
+    AddToDatabase(_metadata, name)
 for x in dl_list:
     metadata = GetMetadata(x)
-    formats = GetFormat(metadata)
-    name = GetName(metadata, {}, formats)
-    DownloadVideo(x, {'format': formats[1], 'outtmpl': f'{dl_dir}/video/%(uploader_id)s/{name}'})
-    GetThumbnail(metadata)
-    AddToDatabase(metadata, name)
-#GetFormats(metadata)
-
+    if "entries" not in metadata.keys():
+        GetVideo(metadata)
+    else:
+        for entry in metadata['entries']:
+            GetVideo(entry)

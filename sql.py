@@ -8,7 +8,7 @@ def AddMetadata(_metadata, auth, _filepath):
     with conn:
         with conn.cursor() as cursor:
             if(_metadata['playlist']):
-                cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath, metadata['playlist_id'], metadata['playlist_index'], metadata['playlist']))
+                cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath, _metadata['playlist_id'], _metadata['playlist_index'], _metadata['playlist']))
             else:
                 cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath, None, None, None))
     conn.close()
