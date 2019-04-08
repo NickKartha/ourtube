@@ -56,6 +56,9 @@ def title(video_title):
 @app.route('/playlist/<playlist_id>')
 def playlist(playlist_id):
     playlist_data = get_by_playlist_id(playlist_id)
-    return render_template('playlist.html', results = playlist_data[0], playlist_name = playlist_data[1])
+    if request.args.get('id'):
+        return render_template('video.html', video = get_by_id(request.args.get('id')), playlist = playlist_data)
+    else:
+        return render_template('playlist.html', results = playlist_data[0], playlist_name = playlist_data[1])
 if __name__ == "__main__":
     app.run(host = "0.0.0.0", port = 80)

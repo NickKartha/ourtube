@@ -12,6 +12,18 @@
 <div class = "video-desc">
 	<p> {{ video[4] | safe }} </p>
 </div>
+{% if playlist %}
+
+<h1>{{ playlist[1] }}</h1>
+{% for result in playlist[0] %}
+<div class = "results">
+	<a href = "{{ '?id=' + result[0] }}">
+		<img class = "result-thumbnail" src = "{{ url_for('static', filename = 'thumbnail/' + result[0] + '.jpg') }}">
+		{{ result[3] }}
+	</a>
+</div>
+{% endfor %}
+{% endif %}
 {% endautoescape %}
 
 {% else %}

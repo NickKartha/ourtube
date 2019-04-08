@@ -5,7 +5,7 @@
 <h1>{{ playlist_name }}</h1>
 	{% for result in results %}
 		<div class = "results">
-			<a href = "{{ 'id/' + result[0] }}">
+			<a href = "{{ '?id=' + result[0] }}">
 				<img class = "result-thumbnail" src = "{{ url_for('static', filename = "thumbnail/" + result[0] + ".jpg") }}">
 				{{ result[3] }}
 			</a>
