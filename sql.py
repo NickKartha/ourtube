@@ -8,8 +8,6 @@ def does_playlist_exist(_id, cursor):
     return cursor.fetchall()
 def add_metadata(_metadata, auth, _filepath):
     conn = OpenConnection(auth)
-    print(_metadata['playlist'])
-    print(_metadata['playlist_id'])
     with conn:
         with conn.cursor() as cursor:
             if(_metadata['playlist']):
@@ -17,7 +15,9 @@ def add_metadata(_metadata, auth, _filepath):
                     cursor.callproc('add_to_playlist', (_metadata['playlist_id'], _metadata['id']))
                 else:
                     cursor.callproc('new_playlist', (_metadata['playlist_id'], _metadata['id'], _metadata['playlist']))
-            cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath))
+                cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath, _metadata['playlist_id']))
+            else:
+                cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath, None))
     conn.close()
 def get_first(_num, auth):
     conn = OpenConnection(auth)

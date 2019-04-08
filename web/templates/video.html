@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if video %}
+
+<h1>{{ video[3] }}</h1>
+<h2>{{ video[1] }}</h2>
+<div class = "video-wrapper">
+	<video src = {{ url_for('static', filename = 'video/' + video[2] + '/' + video[6]) }} controls>
+</div>
+{% autoescape false %} 
+<div class = "video-desc">
+	<p> {{ video[4] | safe }} </p>
+</div>
+{% endautoescape %}
+
+{% else %}
+<p>No results found.</p>
+{% endif %}
+
+{% endblock %}
