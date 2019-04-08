@@ -3,44 +3,59 @@ import psycopg2.extras
 
 def OpenConnection(auth):
     return psycopg2.connect(host=auth[0], user=auth[1], password=auth[2])
-def AddMetadata(_metadata, auth, _filepath):
+def does_playlist_exist(_id, cursor):
+    cursor.callproc('get_playlist', (_id,))
+    return cursor.fetchall()
+def add_metadata(_metadata, auth, _filepath):
     conn = OpenConnection(auth)
+    print(_metadata['playlist'])
+    print(_metadata['playlist_id'])
     with conn:
         with conn.cursor() as cursor:
             if(_metadata['playlist']):
-                cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath, _metadata['playlist_id'], _metadata['playlist_index'], _metadata['playlist']))
-            else:
-                cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath, None, None, None))
+                if does_playlist_exist(_metadata['playlist_id'], cursor):
+                    cursor.callproc('add_to_playlist', (_metadata['playlist_id'], _metadata['id']))
+                else:
+                    cursor.callproc('new_playlist', (_metadata['playlist_id'], _metadata['id'], _metadata['playlist']))
+            cursor.callproc('add_metadata', (_metadata['id'], _metadata['uploader'], _metadata['uploader_id'], _metadata['title'], _metadata['description'], int(_metadata['upload_date']), _filepath))
     conn.close()
-def GetFirst(_num, auth):
+def get_first(_num, auth):
     conn = OpenConnection(auth)
     with conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
             cursor.callproc('get_first', (_num,));
-            _returnValue = cursor.fetchall()
+            retval = cursor.fetchall()
     conn.close()
-    return _returnValue
-def MatchID(_id, auth):
+    return retval
+def match_playlist_id(_id, auth):
+    conn = OpenConnection(auth)
+    with conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+            cursor.callproc('match_playlist_id', (_id,));
+            retval = cursor.fetchall()
+    conn.close()
+    return retval
+def match_id(_id, auth):
     conn = OpenConnection(auth)
     with conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
             cursor.callproc('match_id', (_id,));
-            _returnValue = cursor.fetchall()
+            retval = cursor.fetchall()
     conn.close()
-    return _returnValue
-def MatchTitle(_title, auth):
+    return retval
+def match_title(_title, auth):
     conn = OpenConnection(auth)
     with conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
             cursor.callproc('match_title', (_title,))
-            _returnValue = cursor.fetchall()
+            retval = cursor.fetchall()
     conn.close()
-    return _returnValue
-def LikeTitle(_title, auth):
+    return retval
+def like_title(_title, auth):
     conn = OpenConnection(auth)
     with conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
             cursor.callproc('like_title', (_title,))
-            _returnValue = cursor.fetchall()
+            retval = cursor.fetchall()
     conn.close()
-    return _returnValue
+    return retval

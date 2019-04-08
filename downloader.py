@@ -8,10 +8,10 @@ dl_list = ['https://www.youtube.com/playlist?list=PL_MvsrI4mukQiIPf_zP07yk2nKd8W
 #dl_list = ['PTgchyWrgH8']
 dl_dir = "web/static"
 auth = ['localhost', 'postgres', 'docker']
-def GetMetadata(url):
+def get_metadata(url):
     with youtube_dl.YoutubeDL({}) as ydl:
         return ydl.extract_info(url, False)
-def GetFormat(_metadata):
+def get_format(_metadata):
     # go from best, to worst.
     formats = []
     for x in _metadata.get('formats', [_metadata]):
@@ -35,7 +35,7 @@ def GetFormat(_metadata):
     else:
         print("Unable to find a suitable format.")
         return False
-def GetThumbnail(_metadata):
+def get_thumbnail(_metadata):
     with open(f'{dl_dir}/thumbnail/{_metadata["id"]}.jpg', 'wb') as thumbnail:
         curl = pycurl.Curl()
         curl.setopt(curl.URL, _metadata['thumbnail'])
@@ -43,30 +43,30 @@ def GetThumbnail(_metadata):
         curl.perform()
         curl.close()
         return True
-def GetName(_metadata, opts, _type):
+def get_name(_metadata, opts, _type):
     return PurePath(youtube_dl.YoutubeDL(opts).prepare_filename(_metadata)).stem + _type[0]
-def AddToDatabase(_metadata, _name, _replace = False):
-    if sql.MatchID(_metadata["id"], auth):
+def add_to_database(_metadata, _name, _replace = False):
+    if sql.match_id(_metadata["id"], auth):
         if _replace:
             print("ID found in database, replacing.")
         else:
             print("ID found in database, skipping.")
     else:
         print(f"Adding {_name} to database.")
-        sql.AddMetadata(_metadata, auth, _name)
-def DownloadVideo(url, _opts):
+        sql.add_metadata(_metadata, auth, _name)
+def download_video(url, _opts):
     with youtube_dl.YoutubeDL(_opts) as ydl:
         ydl.download([url])
-def GetVideo(_metadata):
-    formats = GetFormat(_metadata)
-    name = GetName(_metadata, {}, formats)
-    DownloadVideo(_metadata['id'], {'format': formats[1], 'outtmpl': f'{dl_dir}/video/%(uploader_id)s/{name}'})
-    GetThumbnail(_metadata)
-    AddToDatabase(_metadata, name)
+def get_video(_metadata):
+    formats = get_format(_metadata)
+    name = get_name(_metadata, {}, formats)
+    download_video(_metadata['id'], {'format': formats[1], 'outtmpl': f'{dl_dir}/video/%(uploader_id)s/{name}'})
+    get_thumbnail(_metadata)
+    add_to_database(_metadata, name)
 for x in dl_list:
-    metadata = GetMetadata(x)
+    metadata = get_metadata(x)
     if "entries" not in metadata.keys():
-        GetVideo(metadata)
+        get_video(metadata)
     else:
         for entry in metadata['entries']:
-            GetVideo(entry)
+            get_video(entry)
