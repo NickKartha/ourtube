@@ -7,3 +7,8 @@ Expects a postgres server on a Docker domain at "ourtube-net" by default, modify
 ## Implementation Details
 
 This runs using magical unicorns and tiny house elves.
+
+## Dependencies
+
+ - psycopg2
+ - ...
