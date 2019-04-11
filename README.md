@@ -6,9 +6,12 @@ Expects a postgres server on a Docker domain at "ourtube-net" by default, modify
 
 ## Implementation Details
 
-This runs using magical unicorns and tiny house elves.
+This runs using magical unicorns and tiny house elves. <strike> not really </strike>
 
 ## Dependencies
 
  - psycopg2
- - ...
+ - Flask
+ - psycopg2-binary
+
+These can be found in the `requirements.txt` which you can use to call `pip` on.
